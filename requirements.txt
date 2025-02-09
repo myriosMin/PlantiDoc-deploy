@@ -1,0 +1,9 @@
+numpy==1.23
+Flask
+flask
+flask-cors
+tensorflow==2.10
+opencv-python
+werkzeug
+ultralytics
+ollama

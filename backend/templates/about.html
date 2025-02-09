@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter Tight', sans-serif;
+      background-color: #e0e0e0;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .app-container {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    @media (min-width: 1024px) {
+      .app-container {
+        width: 80%;
+        margin: 0 auto;
+      }
+    }
+
+    body.dark-mode .app-container {
+      background-color: #444;
+    }
+
+    /* Header */
+    .header {
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+    }
+
+    body.dark-mode .header {
+      background-color: #444;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #28a745;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .back-button svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 24px;
+      transition: 0.4s;
+      cursor: pointer;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 2px;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+
+    input:checked+.slider {
+      background-color: #28a745;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(26px);
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    /* Section styling */
+    .section {
+      margin: 24px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    body.dark-mode .section {
+      background-color: #555;
+    }
+
+    .section-header {
+      font-size: 20px;
+      font-weight: bold;
+      color: #28a745;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .arrow-icon {
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .section.active .arrow-icon {
+      transform: rotate(180deg);
+      /* Rotate when section is expanded */
+    }
+
+    .section-content {
+      font-size: 16px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+      margin-top: 8px;
+      padding: 0 8px;
+      opacity: 0;
+    }
+
+    /* Styling for About Us box */
+    .section-content p {
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .section-content h3 {
+      margin: 16px 0 8px;
+      font-size: 18px;
+      font-weight: bold;
+      border-bottom: 2px solid #28a745;
+      padding-bottom: 4px;
+    }
+
+    .section-content ul {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .section-content ul li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    /* Styling for diseases box*/
+    .disease-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .disease-item {
+      background-color: #e6e6e6;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      color: #444;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark-mode .disease-item {
+      background-color: #666;
+      color: #fff;
+    }
+
+    .disease-item:hover {
+      background-color: #28a745;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <div class="header">
+      <a class="back-button" href="{{ url_for('index') }}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+        Back to Cover Page
+      </a>
+      <div class="theme-toggle">
+        <span>Light</span>
+        <label class="switch">
+          <input type="checkbox" id="themeSwitch" onchange="toggleTheme()">
+          <span class="slider"></span>
+        </label>
+        <span>Dark</span>
+      </div>
+    </div>
+
+    <div class="section" id="section-plant" onclick="toggleSection(this)">
+      <h2 class="section-header">Plant Disease <span class="arrow-icon">▼</span></h2>
+      <div class="section-content">
+        <p>Below are some common plant diseases from the PlantVillage dataset:</p>
+        <div class="disease-grid" id="disease-grid"></div>
+      </div>
+    </div>
+
+
+    <div class="section" id="section-howitworks" onclick="toggleSection(this)">
+      <h2 class="section-header">How it Works <span class="arrow-icon">▼</span></h2>
+      <div class="section-content"> 
+        <h3>Step 1: Upload or Capture an Image</h3>
+        <p>Start by uploading an image of the plant or capturing one using your device's camera.</p>
+    
+        <h3>Step 2: Image Segmentation</h3>
+        <p>The AI model analyzes the uploaded image and performs segmentation to identify individual leaves.</p>
+        <p>Each leaf is separated and prepared for further classification, ensuring precise diagnosis for every part of the plant.</p>
+    
+        <h3>Step 3: Leaf Classification</h3>
+        <p>The segmented leaves are classified using a deep learning model trained on various plant diseases.</p>
+        <p>The system assigns each leaf to a disease category or marks it as healthy based on visual patterns and symptoms.</p>
+    
+        <h3>Step 4: View Disease Classification Results</h3>
+        <p>The results are displayed on the classification page, providing key details such as:</p>
+        <ul>
+          <li><strong>Detected Disease:</strong> The name of the disease affecting each leaf.</li>
+          <li><strong>Health Analysis:</strong> Overall health status.</li>
+          <li><strong>Visualization:</strong> Bounding boxes to show the affected spots</li>
+        </ul>
+    
+        <h3>Step 5: Chatbot Recommendations</h3>
+        <p>A built-in AI chatbot offers personalized treatment recommendations based on the diagnosis. Suggestions include:</p>
+        <ul>
+          <li>Trimming or removing diseased leaves.</li>
+          <li>Applying appropriate treatments like fungicides or pesticides.</li>
+          <li>Monitoring plant health over time and preventive care tips.</li>
+        </ul>
+      </div>
+    </div>    
+
+    <div class="section" id="section-aboutus" onclick="toggleSection(this)">
+      <h2 class="section-header">About Us <span class="arrow-icon">▼</span></h2>
+      <div class="section-content">
+        <p><p>We are a dedicated team of technology enthusiasts, plant experts, and developers who believe in harnessing the power of AI to improve plant care and agriculture. Our mission is to empower farmers, gardeners, and plant enthusiasts by providing innovative solutions that diagnose and prevent plant diseases quickly and efficiently.</p>
+
+        <h3>Our Mission:</h3>
+        <p>To enhance plant health management by leveraging cutting-edge AI technology to diagnose, monitor, and suggest treatment for various plant diseases.</p>
+
+        <h3>Our Vision:</h3>
+        <p>To create a future where agriculture and gardening are more sustainable, productive, and resilient through AI-driven tools.</p>
+
+        <h3>What We Offer:</h3>
+        <ul>
+          <li><strong>Disease Diagnosis:</strong> Easily detect plant diseases by capturing or uploading images of affected plants.</li>
+          <li><strong>Expert Recommendations:</strong> Receive real-time advice on how to treat and prevent common plant diseases.</li>
+          <li><strong>User-Friendly Interface:</strong> Designed for all levels of users, from small-scale gardeners to large agricultural businesses.</li>
+        </ul>
+
+        <h3>Our Values:</h3>
+        <ul>
+          <li><strong>Innovation:</strong> Continuously pushing the boundaries of technology to improve plant care.</li>
+          <li><strong>Sustainability:</strong> Promoting environmentally-friendly practices in agriculture and gardening.</li>
+          <li><strong>Accessibility:</strong> Providing simple, yet powerful, tools to users of all backgrounds.</li>
+        </ul></p>
+        <div class="disease-grid" id="disease-grid"></div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <script>
+    // On load, populate plant diseases and handle other logic
+    window.onload = function () {
+      if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeSwitch').checked = true;
+      }
+
+  // Automatically expand the section based on URL parameters
+  const targetSection = new URLSearchParams(window.location.search).get('section');
+  if (targetSection) {
+    const sectionDiv = document.getElementById('section-' + targetSection);
+    if (sectionDiv) {
+      openSection(sectionDiv);
+      sectionDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  populateDiseases();
+};
+    function toggleTheme() {
+      if (document.body.classList.contains('dark-mode')) {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+      } else {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+      }
+    }
+
+    function toggleSection(section) {
+      if (section.classList.contains('active')) {
+        closeSection(section);
+      } else {
+        openSection(section);
+      }
+    }
+
+    function openSection(section) {
+      if (!section.classList.contains('active')) {
+        section.classList.add('active');
+        const content = section.querySelector('.section-content');
+        
+        // Temporarily reset height to ensure it's calculated correctly
+        content.style.maxHeight = '0';
+        content.style.opacity = '0';
+        
+        // Force reflow and apply the height/opacity after a short delay
+        setTimeout(() => {
+          content.style.maxHeight = content.scrollHeight + 'px';
+          content.style.opacity = '1';
+        }, 50);  // Small delay for style reflow to take effect
+      }
+    }
+
+
+    function closeSection(section) {
+      const content = section.querySelector('.section-content');
+      content.style.maxHeight = '0';
+      content.style.opacity = 0;
+      section.classList.remove('active');
+    }
+
+    function populateDiseases() {
+      const diseases = [
+        'Apple Scab',
+        'Apple Black Rot',
+        'Cedar Apple Rust',
+        'Healthy Apple',
+        'Corn Northern Leaf Blight',
+        'Corn Common Rust',
+        'Corn Gray Leaf Spot',
+        'Healthy Corn',
+        'Grape Black Rot',
+        'Potato Early Blight',
+        'Potato Late Blight',
+        'Healthy Potato',
+        'Strawberry Leaf Scorch',
+        'Healthy Strawberry',
+        'Tomato Bacterial Spot',
+        'Tomato Early Blight',
+        'Tomato Late Blight',
+        'Tomato Leaf Mold',
+        'Healthy Tomato'
+      ];
+
+      const diseaseGrid = document.getElementById('disease-grid');
+      diseases.forEach(disease => {
+        const item = document.createElement('div');
+        item.className = 'disease-item';
+        item.textContent = disease;
+        diseaseGrid.appendChild(item);
+      });
+    }
+  </script>
+</body>
+
+</html>

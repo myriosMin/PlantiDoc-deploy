@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Page</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0; 
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter Tight', sans-serif;
+      background-color: #e0e0e0;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .app-container {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    /* Desktop: 80% width, center it */
+    @media (min-width: 1024px) {
+      .app-container {
+        width: 80%;
+        margin: 0 auto;
+      }
+    }
+    body.dark-mode .app-container {
+      background-color: #444;
+    }
+
+    .container {
+      padding: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0; 
+      width: 0; 
+      height: 0;
+    }
+    .slider {
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 24px;
+      transition: 0.4s;
+      cursor: pointer;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px; 
+      width: 20px;
+      left: 4px; 
+      bottom: 2px;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+    input:checked + .slider {
+      background-color: #28a745;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .image-container {
+      margin-bottom: 24px;
+    }
+    .image-container img {
+      width: 200px;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .button {
+      width: 80%;
+      padding: 12px;
+      background-color: #28a745;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 28px;
+      text-decoration: none;
+      margin: 24px 0;
+      text-align: center;
+      transition: background-color 0.3s;
+      display: inline-block;
+    }
+    .button:hover {
+      background-color: #218838;
+    }
+
+    .footer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 16px;
+    }
+    .icon-button {
+      background-color: #28a745;
+      border-radius: 50%;
+      width: 48px; 
+      height: 48px;
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      cursor: pointer;
+    }
+    .icon-button img {
+      width: 24px; 
+      height: 24px;
+      transition: filter 0.3s;
+    }
+    body.dark-mode .icon-button img {
+      filter: invert(100%) brightness(150%);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="container">
+      <div class="header">
+        <h1>Welcome</h1>
+        <div class="theme-toggle">
+          <span>Light</span>
+          <label class="switch">
+            <input type="checkbox" id="themeSwitch" onchange="toggleTheme()">
+            <span class="slider"></span>
+          </label>
+          <span>Dark</span>
+        </div>
+      </div>
+
+      <div class="image-container">
+        <img src="{{ url_for('static', filename='images/background.png') }}" alt="Cover Image">
+      </div>
+
+      <a href="{{ url_for('analyze') }}" class="button">Start Diagnosis</a>
+
+      <!-- FOOTER ICON BUTTONS -->
+      <div class="footer-buttons">
+        <!-- 1) Leaf -> expand "Plant Disease" in about.html -->
+        <div class="icon-button" onclick="window.location.href='{{ url_for('about', section='plant') }}'">
+          <img src="https://img.icons8.com/ios-filled/50/leaf.png" alt="Leaf Icon">
+        </div>
+
+        <!-- 2) Train -> expand "How it Works" -->
+        <div class="icon-button" onclick="window.location.href='{{ url_for('about', section='howitworks') }}'">
+          <img src="https://img.icons8.com/ios-filled/50/train.png" alt="Train Icon">
+        </div>
+
+        <!-- 3) Question Mark -> expand "About Us" -->
+        <div class="icon-button" onclick="window.location.href='{{ url_for('about', section='aboutus') }}'">
+          <img src="https://img.icons8.com/ios-filled/50/question-mark.png" alt="Question Mark Icon">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // On load, check dark mode preference
+    window.onload = function() {
+      if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeSwitch').checked = true;
+      }
+    };
+
+    function toggleTheme() {
+      if (document.body.classList.contains('dark-mode')) {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+      } else {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Picture Page</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter Tight', sans-serif;
+      background-color: #e0e0e0;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .app-container {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    @media (min-width: 1024px) {
+      .app-container {
+        width: 80%;
+        margin: 0 auto;
+      }
+    }
+
+    body.dark-mode .app-container {
+      background-color: #444;
+    }
+
+    .container {
+      width: 100%;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .header {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      margin-top: 230px;
+    }
+
+    .subheader {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    body.dark-mode .subheader {
+      color: #ccc;
+    }
+
+    .button {
+      width: 80%;
+      padding: 12px;
+      background-color: #28a745;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 28px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.3s;
+      margin: 20px 0; /* Add spacing above and below each button */
+      box-shadow: none; /* Disable shadow if any */
+      border: none; /* Remove any unwanted border */
+    }
+
+    .button:hover {
+      background-color: #218838;
+    }
+
+    .button.secondary {
+      background-color: transparent;
+      color: #28a745;
+      border: 2px solid #28a745;
+    }
+
+    .button.secondary:hover {
+      background-color: #28a745;
+      color: #fff;
+    }
+
+    /* Custom File Upload Styling */
+    .file-upload {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .file-upload-button, .camera-option {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: none; /* Disable shadow if any */
+      border: none; /* Remove any unwanted border */
+    }
+
+    .file-upload-button:hover {
+      background-color: #218838;
+    }
+
+    #file-name-display {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #28a745;
+    }
+
+    .file-upload input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    /* Spinner styling */
+    .spinner {
+      width: 30px;
+      height: 30px;
+      /* border: 4px solid #ccc; */
+      border-top: 4px solid #28a745;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none;
+      margin-top: 16px;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Back Button */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #28a745;
+      text-decoration: none;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-button svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-toggle .slider-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slider {
+      width: 50px;
+      height: 24px;
+      position: relative;
+      background-color: #ccc;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background-color 0.4s;
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #fff;
+      bottom: 2px;
+      left: 4px;
+      transition: transform 0.4s;
+    }
+
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    input[type="checkbox"]:checked + .slider {
+      background-color: #28a745;
+    }
+
+    input[type="checkbox"]:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Result styling */
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    #insights-container {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    #expandedContent {
+      width: 80%;
+      max-width: 1300px;
+      padding: 40px;
+      margin: 20px auto;
+      border-radius: 12px;
+      background-color: #444;
+      color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      font-size: 20px;
+      line-height: 1.5;
+      overflow: hidden;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    body.dark-mode #expandedContent {
+      background-color: #555;
+      color: #e0e0e0;
+    }
+
+    body:not(.dark-mode) #expandedContent {
+      background-color: #f8f8f8;
+      color: #333;
+    }
+
+    .expand-button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background-color: #28a745;
+      border: none;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .expand-button:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    .expand-button:active {
+      transform: scale(0.98);
+    }
+
+    #imagePreview {
+      width: 250px;
+      height: auto;
+      margin-top: 20px;
+      display: none;
+      border-radius: 10px;
+    }
+
+    .camera-button {
+      width: 72px; 
+      height: 72px;
+      background-color: #28a745;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      display: none;
+      margin-top: 10px;
+    }
+
+    .camera-button img {
+      width: 36px; 
+      height: 36px;
+      margin-top: 15px;
+    }
+
+    #cameraPreview, #capturedCanvas {
+      border-radius: 10px;
+      margin: 20px;
+      border: #218838 2px solid;
+      box-shadow: #555 0 0 10px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <div class="container">
+      <!-- Back Button -->
+      <a class="back-button" href="{{ url_for('index') }}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+        Back to Cover Page
+      </a>
+
+      <!-- Theme Toggle Slider -->
+      <div class="theme-toggle">
+        <span style="font-size: 14px;">Light</span>
+        <label class="slider-container">
+          <input type="checkbox" id="themeSwitch" onchange="toggleTheme()">
+          <div class="slider"></div>
+        </label>
+        <span style="font-size: 14px;">Dark</span>
+      </div>
+
+      <!-- Header and Instructions -->
+      <h1 class="header">Upload an Image for Classification</h1>
+      <p class="subheader">Take a photo or upload an existing image to diagnose plant diseases</p>
+  
+
+      <!-- Custom File Upload Button -->
+      <div class="file-upload">
+        <button class="file-upload-button">Choose File</button>
+        <p id="file-name-display" class="subheader"></p>
+        <input type="file" id="imageUpload" accept="image/*" onchange="previewImage()">
+      </div>
+      
+      <!-- Move "Take Photo" button here -->
+      <button class="camera-option" onclick="openCamera()">Take Photo</button>
+      
+      <!-- Camera preview and capture -->
+      <video id="cameraPreview" autoplay style="display: none; width: 100%; max-width: 400px;"></video>
+      <canvas id="capturedCanvas" style="display: none;"></canvas>
+      
+      <!-- Image Preview -->
+      <div>
+          <img id="imagePreview" src="" alt="Uploaded Image Preview">
+      </div>
+      
+      <!-- Capture button -->
+      <div class="camera-button" id="camera-icon" onclick="capturePhoto()">
+        <img src="https://img.icons8.com/ios-filled/50/camera.png" alt="Camera Icon">
+      </div>      
+      <button class="button" onclick="uploadImage()">Classify</button>
+      <button class="button secondary" id="generateButton" onclick="generateInsights()" disabled>Generate Insights</button>
+      <div class="spinner" id="loadingSpinner"></div>
+      <p id="result"></p>
+      
+      <!-- <p id="insights"></p> -->
+      <div id="insights-container">
+        <p id="insights"></p>
+        <button class="expand-button" onclick="toggleExpandedContent()">Show Details</button>
+        <div id="expandedContent" style="display: none;"></div>
+      </div>
+       
+    </div>
+  </div>
+
+  <script>
+    function displayFileName() {
+      let fileInput = document.getElementById("imageUpload");
+      let file = fileInput.files[0];
+
+      if (file) {
+        document.getElementById("file-name-display").innerText = "Uploaded: " + file.name;
+      } else {
+        document.getElementById("file-name-display").innerText = "";
+      }
+    }
+
+    window.onload = function () {
+      if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeSwitch').checked = true;
+      }
+    };
+
+    function toggleTheme() {
+      if (document.body.classList.contains('dark-mode')) {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+      } else {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+      }
+    }
+
+    let lastPrediction = "";
+
+    function showSpinner() {
+      document.getElementById("loadingSpinner").style.display = "block";
+    }
+
+    function hideSpinner() {
+      document.getElementById("loadingSpinner").style.display = "none";
+    }
+
+    function uploadImage() {
+      let fileInput = document.getElementById("imageUpload");
+      let file = fileInput.files[0];
+      if (!file) {
+        alert("Please select an image first.");
+        return;
+      }
+
+      showSpinner();
+
+      let formData = new FormData();
+      formData.append("file", file);
+
+      fetch("http://127.0.0.1:5001/classify", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("result").innerText = "Prediction: " + data.prediction;
+          lastPrediction = data.prediction;
+          document.getElementById("generateButton").disabled = false;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          document.getElementById("result").innerText = "Error classifying the image.";
+        })
+        .finally(() => hideSpinner());
+    }
+
+    function generateInsights() {
+      if (!lastPrediction) {
+        alert("No classification result available.");
+        return;
+      }
+
+      showSpinner();
+
+      fetch("http://127.0.0.1:5001/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prediction: lastPrediction }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const markdownContent = data.ollama_response;
+
+          // Convert markdown to HTML
+          const htmlContent = marked.parse(markdownContent);
+
+          // Update the insights container with HTML
+          document.getElementById("insights").innerText = "Insights Generated!";
+          let resultContainer = document.getElementById("expandedContent");
+          resultContainer.innerHTML = "<strong>Predictions:</strong>";
+  
+          let ul = document.createElement("ul"); 
+          ul.style.textAlign = "left";
+  
+          data.prediction.forEach((label) => {
+              let li = document.createElement("li"); 
+              li.style.textAlign = "left";
+              li.textContent = label;
+              ul.appendChild(li);
+          });
+  
+          resultContainer.appendChild(ul); 
+          lastPrediction = data.prediction;
+          document.getElementById("generateButton").disabled = false;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          document.getElementById("insights").innerText = "Error generating insights.";
+        })
+        .finally(() => hideSpinner());
+    }
+
+    function toggleExpandedContent() {
+      const content = document.getElementById("expandedContent");
+      if (content.style.display === "none" || !content.style.display) {
+        content.style.display = "block";
+        document.querySelector(".expand-button").innerText = "Hide Details";
+      } else {
+        content.style.display = "none";
+        document.querySelector(".expand-button").innerText = "Show Details";
+      }
+    }
+
+    function previewImage() {
+        let fileInput = document.getElementById("imageUpload");
+        let preview = document.getElementById("imagePreview");
+        let file = fileInput.files[0];
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    let videoStream = null;
+
+    function openCamera() {
+        let video = document.getElementById("cameraPreview");
+        let canvas = document.getElementById("capturedCanvas");
+        
+        // Request access to the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                videoStream = stream;
+                video.srcObject = stream;
+                video.style.display = "block"; // Show video preview
+                document.getElementById("camera-icon").style.display = "block";
+            })
+            .catch((error) => {
+                console.error("Camera access denied:", error);
+                alert("Camera access is required to take a photo.");
+            });
+    }
+
+    function capturePhoto() {
+        let video = document.getElementById("cameraPreview");
+        let canvas = document.getElementById("capturedCanvas");
+        let context = canvas.getContext("2d");
+        
+        // Set canvas dimensions to match the video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Draw the current video frame onto the canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert the canvas image to a data URL
+        let imageData = canvas.toDataURL("image/png");
+
+        // Hide the video preview
+        video.style.display = "none";
+
+        // Stop the video stream
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+        }
+
+        // Set the preview image and store it as a file
+        let preview = document.getElementById("imagePreview");
+        preview.src = imageData;
+        preview.style.display = "block";
+
+        // Convert data URL to Blob and create a File object
+        fetch(imageData)
+            .then(res => res.blob())
+            .then(blob => {
+                let file = new File([blob], "captured_image.png", { type: "image/png" });
+                let fileInput = document.getElementById("imageUpload");
+                let dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+            });
+    }
+  </script>
+</body>
+
+</html>

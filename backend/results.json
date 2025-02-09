@@ -1,0 +1,10 @@
+[
+    {
+        "file_path": "data/leaves/pixelcut-export_leaf_0.jpg",
+        "prediction": "Tomato___Late_blight"
+    },
+    {
+        "file_path": "data/leaves/pixelcut-export_leaf_1.jpg",
+        "prediction": "Tomato___Late_blight"
+    }
+]
