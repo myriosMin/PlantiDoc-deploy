@@ -132,7 +132,7 @@ Ensure Python is installed and added to your system PATH.
 ---
 
 ## 💎 Authors & Credits
-[Year 2, AI Engineering Project, Diploma in AI & Data Engineering, Nanyang Polytechnic]
+[Year 2, Computer Vision Project, Diploma in AI & Data Engineering, Nanyang Polytechnic]
 - [**Min Phyo Thura**](https://github.com/your-github-handle)  
 - [Lim Jin Bin](https://github.com/LimJinBin32)  
 - [Alexander Chan](https://github.com/Redbeanchan)  
