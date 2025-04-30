@@ -131,8 +131,17 @@ Ensure Python is installed and added to your system PATH.
 
 ---
 
+## 💎 Authors & Credits
+[Year 2, AI Engineering Project, Diploma in AI & Data Engineering, Nanyang Polytechnic]
+- [**Min Phyo Thura**](https://github.com/your-github-handle)  
+- [Lim Jin Bin](https://github.com/LimJinBin32)  
+- [Alexander Chan](https://github.com/Redbeanchan)  
+- [Mohammad Habib](https://github.com/habibmohammad35)
+
+---
+
 ## 📜 License
-Licensed under the **MIT License**.
+Licensed under the **MIT License with Common Clause**.
 
 ## 🤝 Contributing
 Contributions are welcome! Open an issue or submit a pull request.
